@@ -1,0 +1,72 @@
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+description = """mole-recipes-sanity-test"""
+
+sourceSets {
+	test {
+		java {
+			srcDirs 'src/cucumber'
+			srcDirs 'src/cucumber/java'
+			srcDirs 'src/test'
+		}
+	}
+	main {
+		java {
+			srcDirs 'src/main'
+		}
+	}
+}
+
+tasks.withType(Test) {
+	scanForTestClasses = false
+	include "**/*Test.class"
+}
+
+//to run cucumber test use ./gradlew build -Pcucumber
+test {
+	if (project.hasProperty('cucumber')) {
+		include "**/*Runner.class"
+		exclude "**/*Test.class"
+	}
+}
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+test {
+	testLogging {
+		events "passed", "skipped", "failed", "standardOut", "standardError"
+	}
+}
+
+tasks.withType(JavaCompile){
+	options.warnings = false
+}
+
+dependencies {
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:'2.1.5.RELEASE'
+    compile group: 'org.json', name: 'json', version:'20180130'
+    compile group: 'joda-time', name: 'joda-time', version:'2.10.2'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version:'2.9.8'
+    compile group: 'com.jayway.jsonpath', name: 'json-path', version:'2.4.0'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version:'3.6'
+    compile group: 'info.cukes', name: 'cucumber-java', version:'1.2.5'
+    testCompile group: 'info.cukes', name: 'cucumber-junit', version:'1.2.5'
+    testCompile group: 'junit', name: 'junit', version:'4.12'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:'2.1.5.RELEASE'
+    testCompile(group: 'com.jayway.restassured', name: 'rest-assured', version:'2.9.0') {
+exclude(module: 'groovy-xml')
+
+  // see https://translate.googleusercontent.com/translate_c?depth=1&hl=en&prev=search&rurl=translate.google.com&sl=pt-BR&sp=nmt4&u=http://blog.caelum.com.br/erros-com-jaxb-no-java-9/&xid=17259,15700021,15700124,15700149,15700186,15700191,15700201,15700214,15700227,15700230&usg=ALkJrhimk41LX8kh_bSKFc6M9tlqeLcfnA
+	compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+    }
+}
